@@ -87,3 +87,80 @@ resource "aws_security_group" "nginx_sg_test" {
     Name = "nginx_sg_test"
   }
 }
+
+resource "aws_instance" "nginx_instance_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.public_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  user_data = <<-EOF
+              #!/bin/bash
+              yum install -y nginx
+              service nginx start
+              chkconfig nginx on
+              EOF
+
+  tags = {
+    Name = "nginx_instance_test"
+}
+  }
+
+resource "aws_instance" "public_instance1_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.public_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  tags = {
+    Name = "public_instance1_test"
+}
+  }
+resource "aws_instance" "public_instance2_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.public_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  tags = {
+    Name = "public_instance2_test"
+}
+  }
+
+resource "aws_instance" "private_instance1_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.private_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  tags = {
+    Name = "private_instance1_test"
+}
+  }
+
+resource "aws_instance" "private_instance2_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.private_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  tags = {
+    Name = "private_instance1_test"
+}
+  }
+
+resource "aws_instance" "private_instance3_test" {
+  ami                    = "ami-0e731c8a588258d0d"
+  instance_type          = "t2.micro" 
+  subnet_id              = element(aws_subnet.private_subnet_test[*].id, 0)
+  vpc_security_group_ids = [aws_security_group.nginx_sg_test.id]
+  key_name               = "terraform-keys"
+  tags = {
+    Name = "private_instance1_test"
+}
+  }
+
+output "public_ip" {
+  value       = aws_instance.nginx_instance_test.public_ip
+  description = "The public IP of the Instance"
+}
