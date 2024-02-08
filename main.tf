@@ -59,3 +59,31 @@ resource "aws_route_table_association" "public_subnet_associations" {
   subnet_id      = aws_subnet.public_subnet_test[count.index].id
   route_table_id = aws_route_table.public_route_table_test.id
 }
+
+resource "aws_security_group" "nginx_sg_test" {
+  vpc_id = aws_vpc.vpc_test.id
+
+   ingress {
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+  tags = {
+    Name = "nginx_sg_test"
+  }
+}
