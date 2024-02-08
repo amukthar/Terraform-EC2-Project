@@ -34,3 +34,28 @@ resource "aws_subnet" "private_subnet_test" {
       Name = "private_subnet_test"
   }
 }
+
+resource "aws_internet_gateway" "gw_test" {
+  vpc_id = aws_vpc.vpc_test.id
+  tags = {
+      Name = "gw_test"
+  }
+}
+
+resource "aws_route_table" "public_route_table_test" {
+  vpc_id = aws_vpc.vpc_test.id
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = aws_internet_gateway.gw_test.id
+  }
+  tags = {
+      Name = "public_route_table_test"
+  }
+}
+
+resource "aws_route_table_association" "public_subnet_associations" {
+  count          = length(aws_subnet.public_subnet_test)
+  subnet_id      = aws_subnet.public_subnet_test[count.index].id
+  route_table_id = aws_route_table.public_route_table_test.id
+}
